@@ -115,6 +115,7 @@ export default function QuizSection({
             answerState={quizState.answers[i]}
             isSubmitted={quizState.isSubmitted}
             onSelect={(choiceIndex) => handleSelect(i, choiceIndex)}
+            isGrade1={grade === 'grade1'}
           />
         ))}
       </div>
