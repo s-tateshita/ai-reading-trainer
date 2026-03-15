@@ -1,4 +1,11 @@
 import type { DailyContent } from './types'
+import manifestJson from '@/content/manifest.json'
+
+/**
+ * コンテンツが存在する日付の一覧（manifest.json を正規情報源とする）。
+ * 将来は GitHub Actions でデータ追加時に自動更新する。
+ */
+export const AVAILABLE_DATES: string[] = manifestJson as string[]
 
 /**
  * 指定日付のコンテンツを取得する。

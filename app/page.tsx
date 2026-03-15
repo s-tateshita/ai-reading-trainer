@@ -1,17 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import type { DailyContent } from '@/lib/types'
-import { getTodayString, getDailyContent, formatDateJa, getDayOfWeekJa } from '@/lib/data'
+import { getTodayString, getDailyContent, formatDateJa, getDayOfWeekJa, AVAILABLE_DATES } from '@/lib/data'
 import Header from '@/components/Header'
 import DailyProblem from '@/components/DailyProblem'
 import NotFoundMessage from '@/components/NotFoundMessage'
 
-// ============================================================
-// デバッグ用：URLパラメータで日付指定を可能にする
-//   例: /?date=2026-03-16
-// ============================================================
-function getTargetDate(): string {
+/** URLパラメータ ?date=YYYY-MM-DD があればそちらを使い、なければ今日 */
+function getInitialDate(): string {
   if (typeof window !== 'undefined') {
     const params = new URLSearchParams(window.location.search)
     const d = params.get('date')
@@ -24,14 +21,38 @@ export default function HomePage() {
   const [dateStr, setDateStr] = useState<string>('')
   const [content, setContent] = useState<DailyContent | null | undefined>(undefined)
 
-  useEffect(() => {
-    const target = getTargetDate()
-    setDateStr(target)
+  /** 指定日付のコンテンツを読み込み、URLも更新する（リロードなし） */
+  const loadDate = useCallback((targetDate: string) => {
+    setContent(undefined) // ローディング状態
+    setDateStr(targetDate)
 
-    getDailyContent(target).then((data) => {
+    // 今日の場合はクエリなし、過去日はクエリあり
+    const todayStr = getTodayString()
+    const newUrl = targetDate === todayStr
+      ? window.location.pathname
+      : `${window.location.pathname}?date=${targetDate}`
+    window.history.pushState({ date: targetDate }, '', newUrl)
+
+    getDailyContent(targetDate).then((data) => {
       setContent(data ?? null)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     })
   }, [])
+
+  // 初回マウント
+  useEffect(() => {
+    loadDate(getInitialDate())
+  }, [loadDate])
+
+  // ブラウザの「戻る」「進む」に追従
+  useEffect(() => {
+    const handlePopState = (e: PopStateEvent) => {
+      const d = (e.state as { date?: string } | null)?.date
+      loadDate(d && /^\d{4}-\d{2}-\d{2}$/.test(d) ? d : getTodayString())
+    }
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [loadDate])
 
   // ローディング
   if (content === undefined || !dateStr) {
@@ -60,7 +81,11 @@ export default function HomePage() {
 
       <main id="main-content" tabIndex={-1}>
         {content ? (
-          <DailyProblem content={content} />
+          <DailyProblem
+            content={content}
+            availableDates={AVAILABLE_DATES}
+            onSelectDate={loadDate}
+          />
         ) : (
           <NotFoundMessage dateStr={`${formatDateJa(dateStr)}（${getDayOfWeekJa(dateStr)}）`} />
         )}

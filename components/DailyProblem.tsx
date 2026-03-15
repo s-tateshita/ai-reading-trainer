@@ -11,6 +11,10 @@ import ResultBanner from './ResultBanner'
 
 interface DailyProblemProps {
   content: DailyContent
+  /** 利用可能な日付一覧（カレンダーのクリック可否判定に使用） */
+  availableDates: string[]
+  /** カレンダーで別の日付が選択されたときのコールバック */
+  onSelectDate: (date: string) => void
 }
 
 const GRADE_LABELS: Record<GradeLevel, string> = {
@@ -24,7 +28,7 @@ interface BottomResult {
   gradeLabel: string
 }
 
-export default function DailyProblem({ content }: DailyProblemProps) {
+export default function DailyProblem({ content, availableDates, onSelectDate }: DailyProblemProps) {
   const [activeGrade, setActiveGrade] = useState<GradeLevel>('grade1')
   // 採点後にタブの完了マークを再描画するためのカウンタ
   const [completionTick, setCompletionTick] = useState(0)
@@ -97,7 +101,11 @@ export default function DailyProblem({ content }: DailyProblemProps) {
 
       {/* 取り組み記録カレンダー */}
       <div className="mt-10">
-        <HistoryCalendar key={completionTick} />
+        <HistoryCalendar
+          key={completionTick}
+          availableDates={availableDates}
+          onSelectDate={onSelectDate}
+        />
       </div>
 
       {/* ── 採点結果（ページ最下部） ── */}

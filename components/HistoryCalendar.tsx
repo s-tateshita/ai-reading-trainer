@@ -9,6 +9,13 @@ interface DayMark {
   grade7: boolean
 }
 
+interface HistoryCalendarProps {
+  /** コンテンツが存在する日付の一覧（YYYY-MM-DD） */
+  availableDates: string[]
+  /** 問題がある日付セルをクリックしたときのコールバック */
+  onSelectDate: (date: string) => void
+}
+
 function buildMarkMap(sessions: SessionResult[]): Map<string, DayMark> {
   const map = new Map<string, DayMark>()
   for (const s of sessions) {
@@ -31,7 +38,7 @@ function getFirstDayOfWeek(year: number, month: number): number {
 
 const WEEKDAYS = ['日', '月', '火', '水', '木', '金', '土']
 
-export default function HistoryCalendar() {
+export default function HistoryCalendar({ availableDates, onSelectDate }: HistoryCalendarProps) {
   const today = new Date()
   const [viewYear, setViewYear] = useState(today.getFullYear())
   const [viewMonth, setViewMonth] = useState(today.getMonth())
@@ -71,7 +78,6 @@ export default function HistoryCalendar() {
     ...Array(firstDow).fill(null),
     ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
   ]
-  // 6行になるよう末尾を補完
   while (cells.length % 7 !== 0) cells.push(null)
 
   return (
@@ -162,13 +168,11 @@ export default function HistoryCalendar() {
           const mark = markMap.get(dateStr)
           const isToday = dateStr === todayStr
           const dow = (firstDow + day - 1) % 7
+          const hasContent = availableDates.includes(dateStr)
 
-          return (
-            <div
-              key={dateStr}
-              className="flex flex-col items-center py-1"
-            >
-              {/* 日付数字 */}
+          /** 日付数字＋丸マークの共通パーツ */
+          const inner = (
+            <>
               <span
                 className={`text-xs w-6 h-6 flex items-center justify-center rounded-full font-medium
                   ${isToday ? 'bg-[#8b5e3c] text-white' : ''}
@@ -179,26 +183,38 @@ export default function HistoryCalendar() {
               >
                 {day}
               </span>
-
-              {/* 丸マーク */}
               {mark && (
                 <div className="flex gap-0.5 mt-0.5">
                   {mark.grade1 && (
-                    <span
-                      className="w-2 h-2 rounded-full bg-[#4a7c6f]"
-                      title="小1 完了"
-                      aria-label="小1完了"
-                    />
+                    <span className="w-2 h-2 rounded-full bg-[#4a7c6f]" title="小1完了" aria-label="小1完了" />
                   )}
                   {mark.grade7 && (
-                    <span
-                      className="w-2 h-2 rounded-full bg-[#5c6bc0]"
-                      title="中1 完了"
-                      aria-label="中1完了"
-                    />
+                    <span className="w-2 h-2 rounded-full bg-[#5c6bc0]" title="中1完了" aria-label="中1完了" />
                   )}
                 </div>
               )}
+            </>
+          )
+
+          if (hasContent) {
+            // 問題あり → ボタンとしてクリック可能
+            return (
+              <button
+                key={dateStr}
+                onClick={() => onSelectDate(dateStr)}
+                className="flex flex-col items-center py-1 rounded hover:bg-[#f5f0e8] active:bg-[#ede8de] transition-colors"
+                aria-label={`${viewYear}年${viewMonth + 1}月${day}日の問題を開く`}
+                title="クリックしてこの日の問題へ"
+              >
+                {inner}
+              </button>
+            )
+          }
+
+          // 問題なし → 表示のみ（ボタンにしない）
+          return (
+            <div key={dateStr} className="flex flex-col items-center py-1">
+              {inner}
             </div>
           )
         })}
