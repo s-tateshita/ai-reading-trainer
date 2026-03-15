@@ -50,20 +50,20 @@ export default function QuestionItem({
    * 中1: 問題文 0.85rem / 選択肢 0.75rem
    */
   const promptSize = isGrade1
-    ? 'clamp(0.9rem, 2.4vw, 1.05rem)'
-    : 'clamp(0.78rem, 1.9vw, 0.9rem)'
+    ? 'clamp(0.85rem, 2.2vw, 1rem)'
+    : 'clamp(0.75rem, 1.9vw, 0.88rem)'
   const choiceSize = isGrade1
-    ? 'clamp(0.8rem, 2.1vw, 0.95rem)'
-    : 'clamp(0.68rem, 1.7vw, 0.82rem)'
+    ? 'clamp(0.75rem, 2vw, 0.88rem)'
+    : 'clamp(0.65rem, 1.6vw, 0.78rem)'
 
   /*
-   * 設問エリアの高さ：スクロールなしで問題文＋選択肢が収まる値に固定する
-   * - 小1: テキストが少ないので少し低め
-   * - 中1: 長めの問題文に対応するため高め
+   * 設問エリアの高さ
+   * clamp(最小, 推奨vw, 最大) でデバイス幅に応じて調整
+   * タブレット（768px）: ~144px、スマホ（375px）: 112px
    */
   const areaHeight = isGrade1
-    ? 'clamp(8rem, 24vw, 10rem)'
-    : 'clamp(9rem, 26vw, 12rem)'
+    ? 'clamp(7rem, 20vw, 9rem)'
+    : 'clamp(7rem, 20vw, 9rem)'
 
   return (
     <div
@@ -109,10 +109,15 @@ export default function QuestionItem({
         }}
       >
         {/* ── 問題文（右端） ── */}
+        {/*
+          promptコンテナに明示的なwidthを設定することで
+          writing-mode:vertical-rl のカラムがoverflowで切れる問題を解消する。
+          widthを確保すれば <p> もその幅いっぱいに列を展開できる。
+        */}
         <div
           className="shrink-0 overflow-hidden"
           style={{
-            maxWidth: '44%',
+            width: 'clamp(5rem, 22%, 10rem)',
             borderLeft: '1px solid #d4c9b5',
             paddingLeft: '0.5rem',
           }}
@@ -127,6 +132,7 @@ export default function QuestionItem({
               lineHeight: '1.9',
               letterSpacing: '0.06em',
               height: '100%',
+              width: '100%',
               overflow: 'hidden',
             }}
           >
@@ -153,7 +159,7 @@ export default function QuestionItem({
                 disabled={showResult}
                 aria-pressed={isSelectedChoice}
                 aria-label={`選択肢${i + 1}: ${choice}${showResult && isCorrectChoice ? '（正解）' : ''}${showResult && isSelectedChoice && !isCorrectChoice ? '（あなたの回答）' : ''}`}
-                style={{ flex: '1 1 0', minWidth: 0, overflow: 'hidden' }}
+                style={{ flex: '1 1 0', maxWidth: 'clamp(3.5rem, 18vw, 7rem)', minWidth: 0, overflow: 'hidden' }}
               >
                 {/* 番号ラベル（横書き） */}
                 <span
@@ -175,6 +181,7 @@ export default function QuestionItem({
                     overflow: 'hidden',
                     flex: '1 1 0',
                     display: 'block',
+                    width: '100%',
                   }}
                 >
                   {choice}
