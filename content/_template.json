@@ -1,0 +1,110 @@
+{
+  "date": "YYYY-MM-DD",
+  "weekly_theme": "週テーマ（例：自然と生き物）",
+  "daily_theme": "今日のテーマ（例：春の訪れ）",
+  "version": "1.0",
+  "reviewed_by_human": false,
+  "generation_model": null,
+  "tags": [],
+  "levels": {
+    "grade1": {
+      "title": "本文タイトル（小１）",
+      "passage": "本文（150〜220字）\n\n段落の区切りは空行（\\n\\n）で行う。\n\nひらがなを多く使い、やさしい語彙で書く。",
+      "estimated_time": 5,
+      "questions": [
+        {
+          "id": "q1",
+          "type": "multiple_choice",
+          "prompt": "問題文（具体的で事実確認型）",
+          "choices": [
+            "選択肢1",
+            "選択肢2",
+            "選択肢3",
+            "選択肢4"
+          ],
+          "answer": 0,
+          "explanation": "解説文（1〜2文、根拠を本文から示す）"
+        },
+        {
+          "id": "q2",
+          "type": "multiple_choice",
+          "prompt": "問題文",
+          "choices": ["選択肢1", "選択肢2", "選択肢3", "選択肢4"],
+          "answer": 0,
+          "explanation": "解説文"
+        },
+        {
+          "id": "q3",
+          "type": "multiple_choice",
+          "prompt": "問題文",
+          "choices": ["選択肢1", "選択肢2", "選択肢3", "選択肢4"],
+          "answer": 0,
+          "explanation": "解説文"
+        },
+        {
+          "id": "q4",
+          "type": "multiple_choice",
+          "prompt": "問題文",
+          "choices": ["選択肢1", "選択肢2", "選択肢3", "選択肢4"],
+          "answer": 0,
+          "explanation": "解説文"
+        },
+        {
+          "id": "q5",
+          "type": "multiple_choice",
+          "prompt": "問題文（主題・まとめ問題）",
+          "choices": ["選択肢1", "選択肢2", "選択肢3", "選択肢4"],
+          "answer": 0,
+          "explanation": "解説文"
+        }
+      ]
+    },
+    "grade7": {
+      "title": "本文タイトル（中１）",
+      "passage": "本文（400〜550字）\n\n段落の区切りは空行（\\n\\n）で行う。\n\n要旨・理由・推論を含む構成にする。論説的な内容が望ましい。",
+      "estimated_time": 10,
+      "questions": [
+        {
+          "id": "q1",
+          "type": "multiple_choice",
+          "prompt": "問題文（事実確認・内容把握型）",
+          "choices": ["選択肢1", "選択肢2", "選択肢3", "選択肢4"],
+          "answer": 0,
+          "explanation": "解説文"
+        },
+        {
+          "id": "q2",
+          "type": "multiple_choice",
+          "prompt": "問題文（語彙・概念理解型）",
+          "choices": ["選択肢1", "選択肢2", "選択肢3", "選択肢4"],
+          "answer": 0,
+          "explanation": "解説文"
+        },
+        {
+          "id": "q3",
+          "type": "multiple_choice",
+          "prompt": "問題文（理由・因果関係型）",
+          "choices": ["選択肢1", "選択肢2", "選択肢3", "選択肢4"],
+          "answer": 0,
+          "explanation": "解説文"
+        },
+        {
+          "id": "q4",
+          "type": "multiple_choice",
+          "prompt": "問題文（細部確認・比較型）",
+          "choices": ["選択肢1", "選択肢2", "選択肢3", "選択肢4"],
+          "answer": 0,
+          "explanation": "解説文"
+        },
+        {
+          "id": "q5",
+          "type": "multiple_choice",
+          "prompt": "問題文（主題・筆者の主張型）",
+          "choices": ["選択肢1", "選択肢2", "選択肢3", "選択肢4"],
+          "answer": 0,
+          "explanation": "解説文"
+        }
+      ]
+    }
+  }
+}
