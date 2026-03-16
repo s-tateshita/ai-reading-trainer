@@ -24,7 +24,7 @@ export default function QuestionItem({
   const showResult = isSubmitted
 
   function getChoiceClass(choiceIndex: number): string {
-    const base = 'flex flex-col items-center py-1.5 px-1 h-full rounded-md border transition-all duration-150 cursor-pointer select-none focus:outline-none focus:ring-2 focus:ring-offset-1 '
+    const base = 'flex flex-col items-start py-1.5 px-1 h-full rounded-md border transition-all duration-150 cursor-pointer select-none focus:outline-none focus:ring-2 focus:ring-offset-1 '
 
     if (!showResult) {
       return base + (selectedIndex === choiceIndex
@@ -58,12 +58,10 @@ export default function QuestionItem({
 
   /*
    * 設問エリアの高さ
-   * clamp(最小, 推奨vw, 最大) でデバイス幅に応じて調整
-   * タブレット（768px）: ~144px、スマホ（375px）: 112px
+   * 高くするほど1列に入る文字数が増え、不要な改行が減る
+   * タブレット（768px）: ~200px、スマホ（375px）: ~150px
    */
-  const areaHeight = isGrade1
-    ? 'clamp(7rem, 20vw, 9rem)'
-    : 'clamp(7rem, 20vw, 9rem)'
+  const areaHeight = 'min(52vh, 420px)'
 
   return (
     <div
@@ -179,9 +177,9 @@ export default function QuestionItem({
                     lineHeight: '1.9',
                     letterSpacing: '0.06em',
                     overflow: 'hidden',
-                    flex: '1 1 0',
                     display: 'block',
                     width: '100%',
+                    maxHeight: '100%',
                   }}
                 >
                   {choice}
